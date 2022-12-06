@@ -19,6 +19,8 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Transparent
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
@@ -52,7 +54,7 @@ fun WearApp() {
                 verticalArrangement = Arrangement.Center
             )
             {
-                TeamScore(home)
+                TeamScore(home, MaterialTheme.colors.primaryVariant)
             }
             Column(
                 modifier = Modifier
@@ -60,7 +62,7 @@ fun WearApp() {
                     .background(MaterialTheme.colors.secondaryVariant),
                 verticalArrangement = Arrangement.Center
             ) {
-                TeamScore(away)
+                TeamScore(away, MaterialTheme.colors.secondaryVariant)
             }
         }
         Column(
@@ -72,10 +74,12 @@ fun WearApp() {
 
         ) {
 
-            Button(onClick = {
-                home.value = 0
-                away.value = 0
-            }) {
+            Button(
+                onClick = {
+                    home.value = 0
+                    away.value = 0
+                }
+            ) {
                 Icon(
                     imageVector = Icons.Rounded.Refresh,
                     contentDescription = "triggers phone action",
@@ -86,9 +90,19 @@ fun WearApp() {
 }
 
 @Composable
-fun TeamScore(score: MutableState<Int>) {
+fun TeamScore(score: MutableState<Int>, contentColor: Color = MaterialTheme.colors.primary) {
 
-    Button(onClick = { score.value++ }) {
+    Button(
+        onClick = { score.value++ },
+        colors = ButtonDefaults.buttonColors(
+            backgroundColor = Transparent,
+            disabledBackgroundColor = Transparent,
+            disabledContentColor = contentColor.copy(alpha = ContentAlpha.disabled),
+        ),
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight()
+    ) {
 
         Text(
             text = "${score.value}",
